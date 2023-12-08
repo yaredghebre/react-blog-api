@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import myBlog from '../assets/myblog..png';
+import { Link } from 'react-router-dom';
 
 const Posts = () => {
   const [posts, setPosts] = useState([]);
@@ -16,28 +17,18 @@ const Posts = () => {
       });
   }, []);
 
-  // const getImgUrl = () => {
-  //   if (!posts.image) {
-  //     return myBlog;
-  //   } else {
-  //     return posts.image;
-  //   }
-  // };
-
   return (
     <div className="bg-green-200 lg:min-h-screen">
       <div className="container mx-auto w-full py-11">
         <h1 className="text-center text-4xl font-bold">ALL POSTS</h1>
         <div className="flex flex-wrap justify-center">
           {posts.map((post) => (
-            <div
+            <Link
+              to={`/posts/${post.slug}`}
               key={post.id}
               class="transtion m-4 max-w-sm transform cursor-pointer rounded-lg border border-gray-200 bg-white shadow duration-150 hover:scale-105 hover:border-gray-400 hover:shadow-lg hover:shadow-gray-500 dark:border-gray-700 dark:bg-gray-800"
             >
-              <a
-                href="#"
-                className="relative block max-h-[150px] w-full max-w-[250px] overflow-hidden rounded-t-lg"
-              >
+              <div className="relative block max-h-[150px] w-full max-w-[250px] overflow-hidden rounded-t-lg">
                 {!post.image && (
                   <p className="absolute left-1/2 top-1/2 z-10 w-full -translate-x-1/2 -translate-y-1/2 transform py-2 text-center text-xl font-bold uppercase text-red-500">
                     Image Unavailable
@@ -48,7 +39,7 @@ const Posts = () => {
                   src={post.image || myBlog}
                   alt={post.title}
                 />
-              </a>
+              </div>
 
               <div class="p-5">
                 <a href="#">
@@ -60,7 +51,7 @@ const Posts = () => {
                   {post.content}
                 </p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
