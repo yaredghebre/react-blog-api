@@ -7,6 +7,7 @@ const AddNewPost = () => {
   const [formData, setFormData] = useState({
     title: '',
     content: '',
+    image: '',
     published: false,
     categoryId: '',
     tags: [],
@@ -148,6 +149,25 @@ const AddNewPost = () => {
             ></textarea>
           </div>
 
+          {/* Image */}
+          <div className="mb-5">
+            <label
+              htmlFor="image"
+              className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Image (URL)
+            </label>
+            <input
+              type="text"
+              id="image"
+              name="image"
+              value={formData.image}
+              onChange={handleInputChange}
+              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:shadow-sm-light dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              placeholder="Insert the URL of the image"
+            />
+          </div>
+
           {/* Categories */}
           <div className="mb-5">
             <label
@@ -173,9 +193,9 @@ const AddNewPost = () => {
           </div>
 
           {/* Tags */}
-          {/* <div className="mb-5">
+          <div className="mb-5">
             <label
-              // htmlFor="tags"
+              htmlFor="tags"
               className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
             >
               Tags
@@ -196,7 +216,7 @@ const AddNewPost = () => {
                 </label>
               </div>
             ))}
-          </div> */}
+          </div>
 
           {/* Users */}
           <div className="mb-5">
