@@ -8,7 +8,7 @@ const AddNewPost = () => {
     title: '',
     content: '',
     published: false,
-    // categoryId: '',
+    categoryId: '',
     tags: [],
     userId: '',
   });
@@ -34,7 +34,7 @@ const AddNewPost = () => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get('http://localhost:3000/categories');
-        setCategories(response.data.categories);
+        setCategories(response.data);
       } catch (error) {
         console.error('Something went wrong while fetching Categories', error);
       }
@@ -43,7 +43,7 @@ const AddNewPost = () => {
     const fetchTags = async () => {
       try {
         const response = await axios.get('http://localhost:3000/tags');
-        setTags(response.data.tags);
+        setTags(response.data);
       } catch (error) {
         console.error('Something went wrong while fetching Tags', error);
       }
@@ -82,26 +82,34 @@ const AddNewPost = () => {
   };
 
   const handleTagChange = (e) => {
-    const { value } = e.target;
+    const { value, checked } = e.target;
 
-    setFormData({
-      ...formData,
-      tags: [...formData.tags, value],
+    setFormData((prevFormData) => {
+      if (checked) {
+        return {
+          ...prevFormData,
+          tags: [...prevFormData.tags, value],
+        };
+      } else {
+        return {
+          ...prevFormData,
+          tags: prevFormData.tags.filter((tagId) => tagId !== value),
+        };
+      }
     });
   };
 
   return (
     <div className="h-screen bg-red-200">
-      <div className="container mx-auto w-full">
-        <h1 className="text-center text-4xl font-bold">
-          THIS IS THE ADD NEW POST PAGE
-        </h1>
+      <div className="container mx-auto w-full py-10">
+        <h1 className="text-center text-4xl font-bold">Create a New Post</h1>
 
         {/* Form Body */}
         <form
           onSubmit={handleSubmit}
           className="mx-auto mt-11 w-2/5 rounded-md border-2 border-gray-500 bg-red-300 p-5"
         >
+          {/* Title */}
           <div className="mb-5">
             <label
               htmlFor="text"
@@ -115,12 +123,13 @@ const AddNewPost = () => {
               name="title"
               value={formData.title}
               onChange={handleInputChange}
-              className="dark:shadow-sm-light block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:shadow-sm-light dark:focus:border-blue-500 dark:focus:ring-blue-500"
               placeholder="Insert the title of your post"
               required
             />
           </div>
 
+          {/* Content */}
           <div className="mb-5">
             <label
               htmlFor="message"
@@ -139,7 +148,8 @@ const AddNewPost = () => {
             ></textarea>
           </div>
 
-          {/* <div className="mb-5">
+          {/* Categories */}
+          <div className="mb-5">
             <label
               for="categories"
               className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
@@ -160,26 +170,35 @@ const AddNewPost = () => {
                 </option>
               ))}
             </select>
-          </div> */}
+          </div>
 
+          {/* Tags */}
           {/* <div className="mb-5">
             <label
-              htmlFor="tags"
+              // htmlFor="tags"
               className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
             >
               Tags
             </label>
-            <input
-              type="text"
-              id="tags"
-              name="tags"
-              value={formData.tags}
-              onChange={handleTagChange}
-              className="dark:shadow-sm-light block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-              placeholder=""
-            />
+            {tags?.map((tag) => (
+              <div key={tag.id} className="flex gap-3">
+                <input
+                  type="checkbox"
+                  id={tag.id}
+                  name="tags"
+                  value={tag.id}
+                  checked={formData.tags.includes(tag.id)}
+                  onChange={() => handleTagChange(tag.id)}
+                  className="block "
+                />
+                <label htmlFor={tag.id} className="text-sm">
+                  {tag.name}
+                </label>
+              </div>
+            ))}
           </div> */}
 
+          {/* Users */}
           <div className="mb-5">
             <label
               htmlFor="users"
@@ -203,6 +222,7 @@ const AddNewPost = () => {
             </select>
           </div>
 
+          {/* Published */}
           <div className="mb-5">
             <label
               htmlFor="published"
