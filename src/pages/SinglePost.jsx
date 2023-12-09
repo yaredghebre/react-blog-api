@@ -7,7 +7,6 @@ const SinglePost = () => {
   const { slug } = useParams();
   const [post, setPost] = useState(null);
   const [users, setUsers] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const getUserById = (userId) => {
@@ -15,23 +14,17 @@ const SinglePost = () => {
     return user.name;
   };
 
-  const getCategoryById = (categoryId) => {
-    const category = categories.find((category) => category.id === categoryId);
-    return category ? category.name : 'Unknown Category';
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [postData, usersData, categoriesData] = await Promise.all([
-          axios.get(`http://localhost:3000/posts/${slug}`),
-          axios.get('http://localhost:3000/users'),
-          axios.get('http://localhost:3000/categories'),
-        ]);
+        const [postData, usersData, categoriesData, tagsData] =
+          await Promise.all([
+            axios.get(`http://localhost:3000/posts/${slug}`),
+            axios.get('http://localhost:3000/users'),
+          ]);
 
         setPost(postData.data);
         setUsers(usersData.data.users);
-        setCategories(categoriesData.data);
         setIsLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -67,9 +60,18 @@ const SinglePost = () => {
             <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
               Caption: {post.content}
             </p>
+            <p>Slug: {post.slug}</p>
             <p>User: {getUserById(post.userId)}</p>
-            <p>Category: {getCategoryById(post.categoryId)}</p>
-            <p></p>
+            <p>Category: {post.category.name} </p>
+            <ul>
+              Tags:
+              {post.tags?.map((tag, index) => (
+                <span key={index}>
+                  {tag.name}
+                  {index !== post.tags.length - 1 ? ', ' : ''}
+                </span>
+              ))}
+            </ul>
           </div>
         </div>
       </div>
